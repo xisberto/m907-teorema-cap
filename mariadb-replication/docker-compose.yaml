@@ -1,0 +1,43 @@
+version: '3'
+
+services:
+
+  host01:
+    image: mariadb:latest
+    restart: unless-stopped
+    networks:
+      - mariadb-replication
+    environment:
+      - MARIADB_ROOT_PASSWORD=secret
+    volumes:
+      - ./host01/config:/etc/mysql/conf.d
+      - ./host01/init:/docker-entrypoint-initdb.d
+
+  host02:
+    image: mariadb:latest
+    restart: unless-stopped
+    depends_on:
+      - host01
+    networks:
+      - mariadb-replication
+    environment:
+      - MARIADB_ROOT_PASSWORD=secret
+    volumes:
+      - ./host02/config:/etc/mysql/conf.d
+      - ./host02/init:/docker-entrypoint-initdb.d
+
+  host03:
+    image: mariadb:latest
+    restart: unless-stopped
+    depends_on:
+      - host01
+    networks:
+      - mariadb-replication
+    environment:
+      - MARIADB_ROOT_PASSWORD=secret
+    volumes:
+      - ./host03/config:/etc/mysql/conf.d
+      - ./host03/init:/docker-entrypoint-initdb.d
+  
+networks:
+  mariadb-replication:
