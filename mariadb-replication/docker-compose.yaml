@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
 
@@ -44,6 +44,9 @@ services:
     restart: unless-stopped
     networks:
       - mariadb-replication
+    ports:
+      - 3306:3306
+      - 8989:8989
     volumes:
       - ./maxscale/local.cnf:/etc/maxscale.cnf.d/local.cnf
   

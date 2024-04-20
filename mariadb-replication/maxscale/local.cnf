@@ -14,16 +14,16 @@ address=host03
 rank=secondary
 
 [monitor01]
-type=monitor01
+type=monitor
 module=mariadbmon
 servers=host01,host02,host03
 user=monitor_user
 password=monitorsecret
-monitor_interal=2s
+monitor_interval=2s
 
 [service01]
 type=service
-router=readconnroute
+router=readwritesplit
 servers=host01,host02,host03
 user=maxscale
 password=maxscale_pw
