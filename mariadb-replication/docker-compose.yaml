@@ -1,4 +1,4 @@
-version: '3'
+version: '3.8'
 
 services:
 
@@ -38,6 +38,17 @@ services:
     volumes:
       - ./host03/config:/etc/mysql/conf.d
       - ./host03/init:/docker-entrypoint-initdb.d
+
+  lb:
+    image: mariadb/maxscale:latest
+    restart: unless-stopped
+    networks:
+      - mariadb-replication
+    ports:
+      - 3306:3306
+      - 8989:8989
+    volumes:
+      - ./maxscale/local.cnf:/etc/maxscale.cnf.d/local.cnf
   
 networks:
   mariadb-replication:
