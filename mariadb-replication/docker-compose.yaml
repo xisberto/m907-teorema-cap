@@ -4,7 +4,11 @@ services:
 
   host01:
     image: mariadb:latest
-    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     networks:
       - mariadb-replication
     environment:
@@ -15,7 +19,11 @@ services:
 
   host02:
     image: mariadb:latest
-    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     depends_on:
       - host01
     networks:
@@ -28,7 +36,11 @@ services:
 
   host03:
     image: mariadb:latest
-    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 1G
     depends_on:
       - host01
     networks:
@@ -39,9 +51,15 @@ services:
       - ./host03/config:/etc/mysql/conf.d
       - ./host03/init:/docker-entrypoint-initdb.d
 
-  lb:
+  endpoint:
     image: mariadb/maxscale:latest
-    restart: unless-stopped
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 48M
+    depends_on:
+      - host03
     networks:
       - mariadb-replication
     ports:
@@ -49,6 +67,57 @@ services:
       - 8989:8989
     volumes:
       - ./maxscale/local.cnf:/etc/maxscale.cnf.d/local.cnf
+
+  benchmark01:
+    image: ybsc:0.17.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - endpoint
+    networks:
+      - mariadb-replication
+    volumes:
+      - ./ycsb/db.properties:/app/ycsb-0.17.0/db.properties
+      - ./ycsb/replica01.properties:/app/ycsb-0.17.0/replica.properties
+      - ./ycsb/results:/results
+
+  benchmark02:
+    image: ybsc:0.17.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - endpoint
+    networks:
+      - mariadb-replication
+    volumes:
+      - ./ycsb/db.properties:/app/ycsb-0.17.0/db.properties
+      - ./ycsb/replica02.properties:/app/ycsb-0.17.0/replica.properties
+      - ./ycsb/results:/results
+
+  benchmark03:
+    image: ybsc:0.17.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - endpoint
+    networks:
+      - mariadb-replication
+    volumes:
+      - ./ycsb/db.properties:/app/ycsb-0.17.0/db.properties
+      - ./ycsb/replica03.properties:/app/ycsb-0.17.0/replica.properties
+      - ./ycsb/results:/results
   
 networks:
   mariadb-replication:
