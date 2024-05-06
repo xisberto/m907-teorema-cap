@@ -56,8 +56,8 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 48M
+          cpus: '2'
+          memory: 256M
     depends_on:
       - host03
     networks:
@@ -66,6 +66,7 @@ services:
       - 3306:3306
       - 8989:8989
     volumes:
+      - ./maxscale/maxscale.cnf:/etc/maxscale.cnf
       - ./maxscale/local.cnf:/etc/maxscale.cnf.d/local.cnf
 
   benchmark01:
