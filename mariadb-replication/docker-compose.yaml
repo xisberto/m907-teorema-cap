@@ -50,7 +50,8 @@ services:
       - ./host03/init:/docker-entrypoint-initdb.d
 
   endpoint:
-    image: mariadb/maxscale:latest
+    image: maxscale:local
+    build: ./maxscale
     deploy:
       resources:
         limits:
