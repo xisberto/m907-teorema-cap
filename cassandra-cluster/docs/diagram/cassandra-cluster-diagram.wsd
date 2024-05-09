@@ -1,0 +1,72 @@
+@startuml
+!define NodeColor lightblue
+!define ServiceColor lightgreen
+skinparam rectangle {
+  BackgroundColor<<Node>> NodeColor
+  BackgroundColor<<Service>> ServiceColor
+}
+
+rectangle "Docker Compose Environment" {
+  node "Node01" as N1 <<Node>> {
+    rectangle "Cassandra Node Config" {
+      database "conf" {
+        [cassandra.yaml] as CY1
+        [init-script.sh] as IS1
+      }
+      file "cql" {
+        [init_cassandra.py] as IC1
+      }
+      database "data" as D1
+    }
+  }
+  node "Node02" as N2 <<Node>> {
+    rectangle "Cassandra Node Config" {
+      database "conf" {
+        [cassandra.yaml] as CY2
+        [init-script.sh] as IS2
+      }
+      file "cql" {
+        [init_cassandra.py] as IC2
+      }
+      database "data" as D2
+    }
+  }
+  node "Node03" as N3 <<Node>> {
+    rectangle "Cassandra Node Config" {
+      database "conf" {
+        [cassandra.yaml] as CY3
+        [init-script.sh] as IS3
+      }
+      file "cql" {
+        [init_cassandra.py] as IC3
+      }
+      database "data" as D3
+    }
+  }
+
+  CY1 .down.> CY2 : Replica\nSynchronization
+  CY2 .down.> CY3 : Replica\nSynchronization
+  CY3 .right.> CY1 : Replica\nSynchronization
+
+  D1 .down.> D2 : Data\nReplication
+  D2 .down.> D3 : Data\nReplication
+  D3 .right.> D1 : Data\nReplication
+
+  IC1 .right.> IC2 : Script Sync
+  IC2 .right.> IC3 : Script Sync
+  IC3 .up.> IC1 : Script Sync
+
+  IS1 .right.> IS2 : Script Sync
+  IS2 .right.> IS3 : Script Sync
+  IS3 .up.> IS1 : Script Sync
+}
+
+cloud {
+  [Client Application] as Client
+}
+
+Client -down-> N1 : Writes/Reads\n(CL=QUORUM)
+Client -down-> N2 : Writes/Reads\n(CL=QUORUM)
+Client -down-> N3 : Writes/Reads\n(CL=QUORUM)
+
+@enduml

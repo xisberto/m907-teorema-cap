@@ -1,0 +1,185 @@
+version: '3.8'
+
+services:
+  init_cassandra:
+    build:
+      context: ./common/cql
+      dockerfile: Dockerfile
+    depends_on:
+      - node01
+      - node02
+      - node03
+    networks:
+      - cassandra_net
+
+  node01:
+    image: cassandra:latest
+    container_name: cassandra_node01
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra_node01,cassandra_node02,cassandra_node03
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
+      - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
+      - ./node01/data:/var/lib/cassandra
+      - ./node01/conf/cassandra.yaml:/etc/cassandra/cassandra.yaml
+      - ./node01/conf/init-script.sh:/etc/cassandra/init-script.sh
+      - ./node01/conf/env/cassandra-env.sh:/etc/cassandra/cassandra-env.sh
+    ports:
+      - "9042:9042"
+      - "7199:7199"
+    networks:
+      - cassandra_net
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  node02:
+    image: cassandra:latest
+    container_name: cassandra_node02
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra_node01,cassandra_node02,cassandra_node03
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
+      - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
+      - ./node02/data:/var/lib/cassandra
+      - ./node02/conf/cassandra.yaml:/etc/cassandra/cassandra.yaml
+      - ./node02/conf/init-script.sh:/etc/cassandra/init-script.sh
+      - ./node02/conf/env/cassandra-env.sh:/etc/cassandra/cassandra-env.sh
+    networks:
+      - cassandra_net
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  node03:
+    image: cassandra:latest
+    container_name: cassandra_node03
+    environment:
+      - CASSANDRA_CLUSTER_NAME=TestCluster
+      - CASSANDRA_SEEDS=cassandra_node01,cassandra_node02,cassandra_node03
+      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
+    volumes:
+      - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
+      - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
+      - ./node03/data:/var/lib/cassandra
+      - ./node03/conf/cassandra.yaml:/etc/cassandra/cassandra.yaml
+      - ./node03/conf/init-script.sh:/etc/cassandra/init-script.sh
+      - ./node03/conf/env/cassandra-env.sh:/etc/cassandra/cassandra-env.sh
+    networks:
+      - cassandra_net
+    healthcheck:
+      test: ["CMD", "cqlsh", "-e", "describe keyspaces"]
+      interval: 30s
+      timeout: 10s
+      retries: 10
+    deploy:
+      resources:
+        limits:
+          cpus: '2'
+          memory: 4G
+
+  benchmark01:
+    image: ybsc:0.18.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - node01
+      - node02
+      - node03
+    environment:
+      - CASSANDRA_NODES=cassandra_node01,cassandra_node02,cassandra_node03
+      - CASSANDRA_PORT=9042
+    networks:
+      - cassandra_net
+    volumes:
+      - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
+      - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
+      - ./ycsb/db.properties:/app/ycsb-0.18.0/db.properties
+      - ./ycsb/replica01.properties:/app/ycsb-0.18.0/replica.properties
+      - ./ycsb/results:/results
+      - ./ycsb/convert_to_json.py:/app/ycsb-0.18.0/convert_to_json.py
+
+    # command: ["/bin/bash", "-c", "/etc/cassandra/init-script.sh"]
+
+  benchmark02:
+    image: ybsc:0.18.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - node01
+      - node02
+      - node03
+    networks:
+      - cassandra_net
+    environment:
+      - CASSANDRA_NODES=cassandra_node01,cassandra_node02,cassandra_node03
+      - CASSANDRA_PORT=9042
+    volumes:
+      - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
+      - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
+      - ./ycsb/db.properties:/app/ycsb-0.18.0/db.properties
+      - ./ycsb/replica02.properties:/app/ycsb-0.18.0/replica.properties
+      - ./ycsb/results:/results
+      - ./ycsb/convert_to_json.py:/app/ycsb-0.18.0/convert_to_json.py
+
+    # command: ["/bin/bash", "-c", "/etc/cassandra/init-script.sh"]
+
+  benchmark03:
+    image: ybsc:0.18.0
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - node01
+      - node02
+      - node03
+    networks:
+      - cassandra_net
+    environment:
+      - CASSANDRA_NODES=cassandra_node01,cassandra_node02,cassandra_node03
+      - CASSANDRA_PORT=9042
+    volumes:
+      - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
+      - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
+      - ./ycsb/db.properties:/app/ycsb-0.18.0/db.properties
+      - ./ycsb/replica03.properties:/app/ycsb-0.18.0/replica.properties
+      - ./ycsb/results:/results
+      - ./ycsb/convert_to_json.py:/app/ycsb-0.18.0/convert_to_json.py
+    # command: ["/bin/bash", "-c", "/etc/cassandra/init-script.sh"]
+
+networks:
+  cassandra_net:
+    driver: bridge
+    ipam:
+      config:
+        - subnet: 172.16.238.0/24

@@ -1,0 +1,24 @@
+cluster_name: TestCluster
+num_tokens: 256
+seed_provider:
+    - class_name: org.apache.cassandra.locator.SimpleSeedProvider
+      parameters:
+          - seeds: "cassandra_node01,cassandra_node02,cassandra_node03"
+
+listen_address: 172.30.0.2
+rpc_address: 0.0.0.0
+broadcast_address: 172.30.0.2
+broadcast_rpc_address: 172.30.0.2
+endpoint_snitch: GossipingPropertyFileSnitch
+start_native_transport: true
+native_transport_port: 9042
+# start_rpc: false
+storage_port: 7000
+ssl_storage_port: 7001
+authenticator: PasswordAuthenticator
+authorizer: CassandraAuthorizer
+role_manager: CassandraRoleManager
+commitlog_sync: periodic
+commitlog_sync_period: 10s
+partitioner: org.apache.cassandra.dht.Murmur3Partitioner
+incremental_backups: true
