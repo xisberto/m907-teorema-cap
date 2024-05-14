@@ -50,8 +50,7 @@ services:
       - ./host03/init:/docker-entrypoint-initdb.d
 
   endpoint:
-    image: maxscale:local
-    build: ./maxscale
+    image: proxysql/proxysql:2.6.2
     deploy:
       resources:
         limits:
@@ -62,11 +61,9 @@ services:
     networks:
       - mariadb-network
     ports:
-      - 3306:3306
-      - 8989:8989
+      - 6032:6032
     volumes:
-      - ./maxscale/maxscale.cnf:/etc/maxscale.cnf
-      - ./maxscale/local.cnf:/etc/maxscale.cnf.d/local.cnf
+      - ./proxysql/proxysql.cnf:/etc/proxysql.cnf
 
   benchmark01:
     image: ybsc:0.17.0

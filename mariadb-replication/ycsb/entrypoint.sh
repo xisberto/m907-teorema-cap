@@ -1,10 +1,10 @@
 #!/bin/sh
 
 # Testa a conexão com o MaxScale
-while ! mariadb -hendpoint -p3306 -uappuser -psecret -e 'use appname'
-do
-  sleep 10
-done
+# while ! mariadb -hendpoint -p6033 -uappuser -psecret -e 'use appname'
+# do
+#   sleep 10
+# done
 
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
