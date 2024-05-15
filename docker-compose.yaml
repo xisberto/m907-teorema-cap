@@ -1,0 +1,115 @@
+version: '3.7'
+
+services:
+
+  mongodb_node1:
+    image: mongo:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+    networks:
+      - mongodb-network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - ./mongodb_node1/config:/etc/mongo
+      - ./mongodb_node1/init:/docker-entrypoint-initdb.d
+
+  mongodb_node2:
+    image: mongo:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+    depends_on:
+      - mongodb_node1
+    networks:
+      - mongodb-network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - ./mongodb_node2/config:/etc/mongo
+      - ./mongodb_node2/init:/docker-entrypoint-initdb.d
+
+  mongodb_node3:
+    image: mongo:latest
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 256M
+    depends_on:
+      - mongodb_node1
+    networks:
+      - mongodb-network
+    environment:
+      - MONGO_INITDB_ROOT_USERNAME=admin
+      - MONGO_INITDB_ROOT_PASSWORD=secret
+    volumes:
+      - ./mongodb_node3/config:/etc/mongo
+      - ./mongodb_node3/init:/docker-entrypoint-initdb.d
+
+  benchmark01:
+    image: ybsc:0.17.0
+    hostname: benchmark01
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - mongodb_node3
+    networks:
+      - mongodb-network
+    volumes:
+      - ./ycsb/load.properties:/app/ycsb-0.17.0/load.properties
+      - ./ycsb/run.properties:/app/ycsb-0.17.0/run.properties
+      - ./ycsb/replica01.properties:/app/ycsb-0.17.0/replica.properties
+      - ./ycsb/results:/results
+
+  benchmark02:
+    image: ybsc:0.17.0
+    hostname: benchmark02
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - mongodb_node3
+    networks:
+      - mongodb-network
+    volumes:
+      - ./ycsb/load.properties:/app/ycsb-0.17.0/load.properties
+      - ./ycsb/run.properties:/app/ycsb-0.17.0/run.properties
+      - ./ycsb/replica02.properties:/app/ycsb-0.17.0/replica.properties
+      - ./ycsb/results:/results
+
+  benchmark03:
+    image: ybsc:0.17.0
+    hostname: benchmark03
+    deploy:
+      resources:
+        limits:
+          cpus: '1'
+          memory: 81M
+    build: ./ycsb/
+    depends_on:
+      - mongodb_node3
+    networks:
+      - mongodb-network
+    volumes:
+      - ./ycsb/load.properties:/app/ycsb-0.17.0/load.properties
+      - ./ycsb/run.properties:/app/ycsb-0.17.0/run.properties
+      - ./ycsb/replica03.properties:/app/ycsb-0.17.0/replica.properties
+      - ./ycsb/results:/results
+
+networks:
+  mongodb-network:
