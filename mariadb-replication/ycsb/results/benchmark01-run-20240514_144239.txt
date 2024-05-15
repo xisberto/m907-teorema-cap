@@ -1,0 +1,105 @@
+/usr/lib/jvm/default-jvm/bin/java  -classpath /app/ycsb-0.17.0/conf:/app/ycsb-0.17.0/lib/HdrHistogram-2.1.4.jar:/app/ycsb-0.17.0/lib/core-0.17.0.jar:/app/ycsb-0.17.0/lib/htrace-core4-4.1.0-incubating.jar:/app/ycsb-0.17.0/lib/jackson-core-asl-1.9.4.jar:/app/ycsb-0.17.0/lib/jackson-mapper-asl-1.9.4.jar:/app/ycsb-0.17.0/lib/mariadb-java-client-3.3.3.jar:/app/ycsb-0.17.0/jdbc-binding/conf:/app/ycsb-0.17.0/jdbc-binding/lib/commons-collections-3.2.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/commons-lang-2.4.jar:/app/ycsb-0.17.0/jdbc-binding/lib/commons-pool-1.5.4.jar:/app/ycsb-0.17.0/jdbc-binding/lib/geronimo-jms_1.1_spec-1.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/geronimo-jta_1.1_spec-1.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/jdbc-binding-0.17.0.jar:/app/ycsb-0.17.0/jdbc-binding/lib/openjpa-jdbc-2.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/openjpa-kernel-2.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/openjpa-lib-2.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/serp-1.13.1.jar site.ycsb.Client -t -db site.ycsb.db.JdbcDBClient -P workloads/workloada -s -P run.properties
+Adding shard node URL: jdbc:mariadb://endpoint:6033/appname
+2024-05-14 14:43:02:071 0 sec: 0 operations; est completion in 0 second 
+Using shards: 1, batchSize:-1, fetchSize: -1
+2024-05-14 14:43:11:982 10 sec: 2916 operations; 291.6 current ops/sec; est completion in 32 seconds [READ AverageLatency(us)=199.83] [UPDATE AverageLatency(us)=3091.53] 
+2024-05-14 14:43:21:982 20 sec: 5917 operations; 300.1 current ops/sec; est completion in 21 seconds [READ AverageLatency(us)=181.92] [UPDATE AverageLatency(us)=2920.43] 
+2024-05-14 14:43:31:982 30 sec: 8482 operations; 256.5 current ops/sec; est completion in 13 seconds [READ AverageLatency(us)=602.4] [UPDATE AverageLatency(us)=6064.39] 
+2024-05-14 14:43:41:982 40 sec: 11917 operations; 343.5 current ops/sec; est completion in 1 second [READ AverageLatency(us)=419.24] [UPDATE AverageLatency(us)=1216.5] 
+2024-05-14 14:43:42:262 40 sec: 12000 operations; 296.43 current ops/sec; [READ AverageLatency(us)=226.53] [CLEANUP AverageLatency(us)=996] [UPDATE AverageLatency(us)=1201.42] 
+[OVERALL], RunTime(ms), 40280
+[OVERALL], Throughput(ops/sec), 297.91459781529295
+[TOTAL_GCS_Copy], Count, 20
+[TOTAL_GC_TIME_Copy], Time(ms), 14
+[TOTAL_GC_TIME_%_Copy], Time(%), 0.03475670307845084
+[TOTAL_GCS_MarkSweepCompact], Count, 0
+[TOTAL_GC_TIME_MarkSweepCompact], Time(ms), 0
+[TOTAL_GC_TIME_%_MarkSweepCompact], Time(%), 0.0
+[TOTAL_GCs], Count, 20
+[TOTAL_GC_TIME], Time(ms), 14
+[TOTAL_GC_TIME_%], Time(%), 0.03475670307845084
+[READ], Operations, 6049
+[READ], AverageLatency(us), 340.8500578608034
+[READ], MinLatency(us), 96
+[READ], MaxLatency(us), 229399
+[READ], Return=OK, 6049
+[READ], 0, 307.04761904761904
+[READ], 1000, 200.7450980392157
+[READ], 2000, 191.67832167832168
+[READ], 3000, 190.6095890410959
+[READ], 4000, 183.87719298245614
+[READ], 5000, 186.77245508982037
+[READ], 6000, 181.86092715231788
+[READ], 7000, 189.38036809815952
+[READ], 8000, 182.58536585365854
+[READ], 9000, 189.49019607843138
+[READ], 10000, 182.13815789473685
+[READ], 11000, 185.23529411764707
+[READ], 12000, 171.7074829931973
+[READ], 13000, 184.98591549295776
+[READ], 14000, 181.22360248447205
+[READ], 15000, 178.75
+[READ], 16000, 174.20754716981133
+[READ], 17000, 180.7074829931973
+[READ], 18000, 192.5632911392405
+[READ], 19000, 182.84810126582278
+[READ], 20000, 182.7054794520548
+[READ], 21000, 186.3181818181818
+[READ], 27000, 56273.125
+[READ], 28000, 347.7295825771325
+[READ], 29000, 151.48364888123925
+[READ], 30000, 185.62641509433962
+[READ], 31000, 240.58904109589042
+[READ], 32000, 222.07746478873239
+[READ], 33000, 207.7793103448276
+[READ], 34000, 266.8622754491018
+[READ], 35000, 244.56338028169014
+[READ], 36000, 225.28387096774193
+[READ], 37000, 1254.8849557522124
+[READ], 38000, 1433.4521276595744
+[READ], 39000, 227.40579710144928
+[CLEANUP], Operations, 1
+[CLEANUP], AverageLatency(us), 996.0
+[CLEANUP], MinLatency(us), 996
+[CLEANUP], MaxLatency(us), 996
+[CLEANUP], 0, 996.0
+[UPDATE], Operations, 5951
+[UPDATE], AverageLatency(us), 3150.0699042177785
+[UPDATE], MinLatency(us), 760
+[UPDATE], MaxLatency(us), 6007442
+[UPDATE], Return=OK, 5951
+[UPDATE], 0, 3842.9303797468356
+[UPDATE], 1000, 3175.6575342465753
+[UPDATE], 2000, 3137.0063694267515
+[UPDATE], 3000, 2886.006451612903
+[UPDATE], 4000, 2834.5859375
+[UPDATE], 5000, 3115.496240601504
+[UPDATE], 6000, 2927.7248322147652
+[UPDATE], 7000, 2941.8394160583944
+[UPDATE], 8000, 3057.25
+[UPDATE], 9000, 2937.605442176871
+[UPDATE], 10000, 3245.299319727891
+[UPDATE], 11000, 3092.3030303030305
+[UPDATE], 12000, 3033.9803921568628
+[UPDATE], 13000, 2987.394904458599
+[UPDATE], 14000, 2961.5797101449275
+[UPDATE], 15000, 3138.751592356688
+[UPDATE], 16000, 3056.112676056338
+[UPDATE], 17000, 3062.7434210526317
+[UPDATE], 18000, 2608.0352112676055
+[UPDATE], 19000, 1632.5874125874127
+[UPDATE], 20000, 1795.0389610389611
+[UPDATE], 21000, 1347.972972972973
+[UPDATE], 27000, 502061.0
+[UPDATE], 28000, 1481.295532646048
+[UPDATE], 29000, 1482.1274509803923
+[UPDATE], 30000, 1285.217741935484
+[UPDATE], 31000, 1119.6967741935484
+[UPDATE], 32000, 1118.0632911392406
+[UPDATE], 33000, 1109.516129032258
+[UPDATE], 34000, 1174.2519083969466
+[UPDATE], 35000, 1183.5157232704403
+[UPDATE], 36000, 1128.1172413793104
+[UPDATE], 37000, 1094.4
+[UPDATE], 38000, 1217.733695652174
+[UPDATE], 39000, 1149.1645569620252

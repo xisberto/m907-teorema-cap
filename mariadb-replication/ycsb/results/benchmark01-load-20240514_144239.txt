@@ -1,0 +1,51 @@
+/usr/lib/jvm/default-jvm/bin/java  -classpath /app/ycsb-0.17.0/conf:/app/ycsb-0.17.0/lib/HdrHistogram-2.1.4.jar:/app/ycsb-0.17.0/lib/core-0.17.0.jar:/app/ycsb-0.17.0/lib/htrace-core4-4.1.0-incubating.jar:/app/ycsb-0.17.0/lib/jackson-core-asl-1.9.4.jar:/app/ycsb-0.17.0/lib/jackson-mapper-asl-1.9.4.jar:/app/ycsb-0.17.0/lib/mariadb-java-client-3.3.3.jar:/app/ycsb-0.17.0/jdbc-binding/conf:/app/ycsb-0.17.0/jdbc-binding/lib/commons-collections-3.2.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/commons-lang-2.4.jar:/app/ycsb-0.17.0/jdbc-binding/lib/commons-pool-1.5.4.jar:/app/ycsb-0.17.0/jdbc-binding/lib/geronimo-jms_1.1_spec-1.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/geronimo-jta_1.1_spec-1.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/jdbc-binding-0.17.0.jar:/app/ycsb-0.17.0/jdbc-binding/lib/openjpa-jdbc-2.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/openjpa-kernel-2.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/openjpa-lib-2.1.1.jar:/app/ycsb-0.17.0/jdbc-binding/lib/serp-1.13.1.jar site.ycsb.Client -load -db site.ycsb.db.JdbcDBClient -P workloads/workloada -s -P load.properties -P replica.properties
+Adding shard node URL: jdbc:mariadb://host01:3306/appname
+2024-05-14 14:42:39:281 0 sec: 0 operations; est completion in 0 second 
+Using shards: 1, batchSize:-1, fetchSize: -1
+2024-05-14 14:42:49:203 10 sec: 1663 operations; 166.3 current ops/sec; est completion in 15 seconds [INSERT AverageLatency(us)=5833.71] 
+2024-05-14 14:42:59:203 20 sec: 3516 operations; 185.3 current ops/sec; est completion in 3 second [INSERT AverageLatency(us)=5388.43] 
+2024-05-14 14:43:01:825 22 sec: 4000 operations; 184.52 current ops/sec; [CLEANUP AverageLatency(us)=864] [INSERT AverageLatency(us)=5414.17] 
+[OVERALL], RunTime(ms), 22623
+[OVERALL], Throughput(ops/sec), 176.81120983070326
+[TOTAL_GCS_Copy], Count, 25
+[TOTAL_GC_TIME_Copy], Time(ms), 14
+[TOTAL_GC_TIME_%_Copy], Time(%), 0.06188392344074615
+[TOTAL_GCS_MarkSweepCompact], Count, 0
+[TOTAL_GC_TIME_MarkSweepCompact], Time(ms), 0
+[TOTAL_GC_TIME_%_MarkSweepCompact], Time(%), 0.0
+[TOTAL_GCs], Count, 25
+[TOTAL_GC_TIME], Time(ms), 14
+[TOTAL_GC_TIME_%], Time(%), 0.06188392344074615
+[CLEANUP], Operations, 1
+[CLEANUP], AverageLatency(us), 864.0
+[CLEANUP], MinLatency(us), 864
+[CLEANUP], MaxLatency(us), 864
+[CLEANUP], 0, 864.0
+[INSERT], Operations, 4000
+[INSERT], AverageLatency(us), 5576.6675
+[INSERT], MinLatency(us), 1783
+[INSERT], MaxLatency(us), 52066
+[INSERT], Return=OK, 4000
+[INSERT], 0, 9468.990476190476
+[INSERT], 1000, 7314.963503649635
+[INSERT], 2000, 5456.196721311476
+[INSERT], 3000, 5625.112994350283
+[INSERT], 4000, 5140.458762886598
+[INSERT], 5000, 5549.683333333333
+[INSERT], 6000, 5376.209677419355
+[INSERT], 7000, 5374.801075268817
+[INSERT], 8000, 5530.3
+[INSERT], 9000, 5443.065217391304
+[INSERT], 10000, 5307.941489361702
+[INSERT], 11000, 5396.4486486486485
+[INSERT], 12000, 5305.159574468085
+[INSERT], 13000, 5443.0
+[INSERT], 14000, 5389.290322580645
+[INSERT], 15000, 5424.315217391304
+[INSERT], 16000, 5176.854166666667
+[INSERT], 17000, 5595.1843575419
+[INSERT], 18000, 5291.671957671958
+[INSERT], 19000, 5454.153005464481
+[INSERT], 20000, 5396.275675675675
+[INSERT], 21000, 5630.858757062147
+[INSERT], 22000, 4991.724637681159
