@@ -12,8 +12,8 @@ RUN mkdir /app &&\
 
 WORKDIR /app/ycsb-${VERSION}
 
-COPY entrypoint.sh ./bin/
-
 RUN curl -O --location https://repo1.maven.org/maven2/org/mariadb/jdbc/mariadb-java-client/3.3.3/mariadb-java-client-3.3.3.jar --output-dir lib/
+
+COPY entrypoint.sh ./bin/
 
 ENTRYPOINT ["/app/ycsb-0.17.0/bin/entrypoint.sh"]

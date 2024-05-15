@@ -1,16 +1,14 @@
-version: '3.8'
-
 services:
 
   host01:
-    image: mariadb:latest
+    image: mariadb:11
     deploy:
       resources:
         limits:
           cpus: '1'
-          memory: 1G
+          memory: 256M
     networks:
-      - mariadb-replication
+      - mariadb-network
     environment:
       - MARIADB_ROOT_PASSWORD=secret
     volumes:
@@ -18,16 +16,16 @@ services:
       - ./host01/init:/docker-entrypoint-initdb.d
 
   host02:
-    image: mariadb:latest
+    image: mariadb:11
     deploy:
       resources:
         limits:
           cpus: '1'
-          memory: 1G
+          memory: 256M
     depends_on:
       - host01
     networks:
-      - mariadb-replication
+      - mariadb-network
     environment:
       - MARIADB_ROOT_PASSWORD=secret
     volumes:
@@ -35,16 +33,16 @@ services:
       - ./host02/init:/docker-entrypoint-initdb.d
 
   host03:
-    image: mariadb:latest
+    image: mariadb:11
     deploy:
       resources:
         limits:
           cpus: '1'
-          memory: 1G
+          memory: 256M
     depends_on:
       - host01
     networks:
-      - mariadb-replication
+      - mariadb-network
     environment:
       - MARIADB_ROOT_PASSWORD=secret
     volumes:
@@ -52,24 +50,24 @@ services:
       - ./host03/init:/docker-entrypoint-initdb.d
 
   endpoint:
-    image: mariadb/maxscale:latest
+    image: proxysql/proxysql:2.6.2
     deploy:
       resources:
         limits:
-          cpus: '1'
-          memory: 48M
+          cpus: '2'
+          memory: 256M
     depends_on:
       - host03
     networks:
-      - mariadb-replication
+      - mariadb-network
     ports:
-      - 3306:3306
-      - 8989:8989
+      - 6032:6032
     volumes:
-      - ./maxscale/local.cnf:/etc/maxscale.cnf.d/local.cnf
+      - ./proxysql/proxysql.cnf:/etc/proxysql.cnf
 
   benchmark01:
     image: ybsc:0.17.0
+    hostname: benchmark01
     deploy:
       resources:
         limits:
@@ -79,14 +77,16 @@ services:
     depends_on:
       - endpoint
     networks:
-      - mariadb-replication
+      - mariadb-network
     volumes:
-      - ./ycsb/db.properties:/app/ycsb-0.17.0/db.properties
+      - ./ycsb/load.properties:/app/ycsb-0.17.0/load.properties
+      - ./ycsb/run.properties:/app/ycsb-0.17.0/run.properties
       - ./ycsb/replica01.properties:/app/ycsb-0.17.0/replica.properties
       - ./ycsb/results:/results
 
   benchmark02:
     image: ybsc:0.17.0
+    hostname: benchmark02
     deploy:
       resources:
         limits:
@@ -96,14 +96,16 @@ services:
     depends_on:
       - endpoint
     networks:
-      - mariadb-replication
+      - mariadb-network
     volumes:
-      - ./ycsb/db.properties:/app/ycsb-0.17.0/db.properties
+      - ./ycsb/load.properties:/app/ycsb-0.17.0/load.properties
+      - ./ycsb/run.properties:/app/ycsb-0.17.0/run.properties
       - ./ycsb/replica02.properties:/app/ycsb-0.17.0/replica.properties
       - ./ycsb/results:/results
 
   benchmark03:
     image: ybsc:0.17.0
+    hostname: benchmark03
     deploy:
       resources:
         limits:
@@ -113,11 +115,12 @@ services:
     depends_on:
       - endpoint
     networks:
-      - mariadb-replication
+      - mariadb-network
     volumes:
-      - ./ycsb/db.properties:/app/ycsb-0.17.0/db.properties
+      - ./ycsb/load.properties:/app/ycsb-0.17.0/load.properties
+      - ./ycsb/run.properties:/app/ycsb-0.17.0/run.properties
       - ./ycsb/replica03.properties:/app/ycsb-0.17.0/replica.properties
       - ./ycsb/results:/results
   
 networks:
-  mariadb-replication:
+  mariadb-network:

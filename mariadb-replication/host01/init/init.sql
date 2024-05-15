@@ -3,9 +3,15 @@ GRANT REPLICATION SLAVE ON *.* TO 'repluser'@'%';
 
 CREATE USER 'monitor_user'@'%' IDENTIFIED BY 'monitorsecret';
 GRANT REPLICATION CLIENT on *.* to 'monitor_user'@'%';
-GRANT SUPER, RELOAD on *.* to 'monitor_user'@'%';
+GRANT REPLICA MONITOR on *.* to 'monitor_user'@'%';
+GRANT CONNECTION ADMIN on *.* to 'monitor_user'@'%';
+GRANT SLAVE MONITOR on *.* to 'monitor_user'@'%';
+GRANT READ_ONLY ADMIN on *.* to 'monitor_user'@'%';
+GRANT BINLOG ADMIN on *.* to 'monitor_user'@'%';
+GRANT REPLICATION SLAVE ADMIN on *.* to 'monitor_user'@'%';
+GRANT REPLICATION SLAVE on *.* to 'monitor_user'@'%';
 
-CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscale_pw';
+CREATE USER 'maxscale'@'%' IDENTIFIED BY 'maxscalesecret';
 GRANT SELECT ON mysql.user TO 'maxscale'@'%';
 GRANT SELECT ON mysql.db TO 'maxscale'@'%';
 GRANT SELECT ON mysql.tables_priv TO 'maxscale'@'%';

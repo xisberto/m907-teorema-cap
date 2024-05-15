@@ -1,0 +1,8 @@
+[maxscale]
+admin_secure_gui=false
+threads=2
+log_info=true
+
+# this enables external access to the REST API outside of localhost
+# please review / modify for any public / non development environments
+admin_host=0.0.0.0

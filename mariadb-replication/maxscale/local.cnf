@@ -17,6 +17,8 @@ rank=secondary
 type=monitor
 module=mariadbmon
 servers=host01,host02,host03
+auto_failover=0
+auto_rejoin=true
 user=monitor_user
 password=monitorsecret
 monitor_interval=2s
@@ -25,8 +27,13 @@ monitor_interval=2s
 type=service
 router=readwritesplit
 servers=host01,host02,host03
+master_reconnection=true
+master_failure_mode=fail_on_write
+master_accept_reads=false
+max_replication_lag=1s
+lazy_connect=true
 user=maxscale
-password=maxscale_pw
+password=maxscalesecret
 
 [listener01]
 type=listener
