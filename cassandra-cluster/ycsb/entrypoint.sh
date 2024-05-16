@@ -33,6 +33,12 @@ function check_all_nodes_available {
     $all_available
 }
 
+# Função para iniciar a simulação de falhas de rede
+function start_network_failure_simulation {
+    echo "Starting network failure simulation..."
+    python3 /app/ycsb-0.18.0/network_failures.py
+}
+
 # Esperar que o Cassandra esteja pronto em todos os nós
 wait_for_cassandra
 
@@ -43,13 +49,21 @@ RUN_COMMAND="/app/ycsb-0.18.0/bin/ycsb.sh run cassandra-cql -P workloads/workloa
 # Timestamp para nomear arquivos de saída
 TIMESTAMP=$(date +%Y%m%d_%H%M%S)
 
-# Executar comando de carga do YCSB
+# Executar comando de carga do YCSB e iniciar simulação de falhas de rede após 20 segundos
 echo "Iniciando carga YCSB em $TIMESTAMP"
-$LOAD_COMMAND > /results/load_$HOSTNAME-$TIMESTAMP.dat
+$LOAD_COMMAND > /results/load_$HOSTNAME-$TIMESTAMP.txt &
+LOAD_PID=$!
+sleep 20
+start_network_failure_simulation &
+wait $LOAD_PID
 
-# Executar comando de execução do YCSB
+# Executar comando de execução do YCSB e iniciar simulação de falhas de rede após 20 segundos
 echo "Iniciando execução YCSB em $TIMESTAMP"
-$RUN_COMMAND > /results/run_$HOSTNAME-$TIMESTAMP.dat
+$RUN_COMMAND > /results/run_$HOSTNAME-$TIMESTAMP.txt &
+RUN_PID=$!
+sleep 20
+start_network_failure_simulation &
+wait $RUN_PID
 
 # Convertendo a saída para JSON
 # python3 /app/ycsb-0.18.0/convert_to_json.py /results/load_$HOSTNAME-$TIMESTAMP.txt /results/load_$HOSTNAME-$TIMESTAMP.json

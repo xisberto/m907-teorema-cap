@@ -1,4 +1,4 @@
-version: '3.8'
+version: "3.8"
 
 services:
   init_cassandra:
@@ -13,13 +13,12 @@ services:
       - cassandra_net
 
   node01:
-    image: cassandra:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: cassandra_node01
-    environment:
-      - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra_node01,cassandra_node02,cassandra_node03
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
       - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
       - ./node01/data:/var/lib/cassandra
@@ -40,17 +39,16 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 4G
 
   node02:
-    image: cassandra:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: cassandra_node02
-    environment:
-      - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra_node01,cassandra_node02,cassandra_node03
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
       - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
       - ./node02/data:/var/lib/cassandra
@@ -67,17 +65,16 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 4G
 
   node03:
-    image: cassandra:latest
+    build:
+      context: .
+      dockerfile: Dockerfile
     container_name: cassandra_node03
-    environment:
-      - CASSANDRA_CLUSTER_NAME=TestCluster
-      - CASSANDRA_SEEDS=cassandra_node01,cassandra_node02,cassandra_node03
-      - CASSANDRA_ENDPOINT_SNITCH=GossipingPropertyFileSnitch
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
       - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
       - ./node03/data:/var/lib/cassandra
@@ -94,7 +91,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '2'
+          cpus: "2"
           memory: 4G
 
   benchmark01:
@@ -102,7 +99,7 @@ services:
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 81M
     build: ./ycsb/
     depends_on:
@@ -115,21 +112,21 @@ services:
     networks:
       - cassandra_net
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
       - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
       - ./ycsb/db.properties:/app/ycsb-0.18.0/db.properties
       - ./ycsb/replica01.properties:/app/ycsb-0.18.0/replica.properties
       - ./ycsb/results:/results
+      - ./ycsb/script/network_failures.py:/app/ycsb-0.18.0/network_failures.py
       - ./ycsb/convert_to_json.py:/app/ycsb-0.18.0/convert_to_json.py
-
-    # command: ["/bin/bash", "-c", "/etc/cassandra/init-script.sh"]
 
   benchmark02:
     image: ybsc:0.18.0
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 81M
     build: ./ycsb/
     depends_on:
@@ -142,21 +139,21 @@ services:
       - CASSANDRA_NODES=cassandra_node01,cassandra_node02,cassandra_node03
       - CASSANDRA_PORT=9042
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
       - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
       - ./ycsb/db.properties:/app/ycsb-0.18.0/db.properties
       - ./ycsb/replica02.properties:/app/ycsb-0.18.0/replica.properties
       - ./ycsb/results:/results
+      - ./ycsb/script/network_failures.py:/app/ycsb-0.18.0/network_failures.py
       - ./ycsb/convert_to_json.py:/app/ycsb-0.18.0/convert_to_json.py
-
-    # command: ["/bin/bash", "-c", "/etc/cassandra/init-script.sh"]
 
   benchmark03:
     image: ybsc:0.18.0
     deploy:
       resources:
         limits:
-          cpus: '1'
+          cpus: "1"
           memory: 81M
     build: ./ycsb/
     depends_on:
@@ -169,13 +166,14 @@ services:
       - CASSANDRA_NODES=cassandra_node01,cassandra_node02,cassandra_node03
       - CASSANDRA_PORT=9042
     volumes:
+      - /var/run/docker.sock:/var/run/docker.sock
       - ./common/cql/init_cassandra.py:/etc/cassandra/init_cassandra.py
       - ./common/credentials/cassandra.credentials:/etc/cassandra/cassandra.credentials
       - ./ycsb/db.properties:/app/ycsb-0.18.0/db.properties
       - ./ycsb/replica03.properties:/app/ycsb-0.18.0/replica.properties
       - ./ycsb/results:/results
+      - ./ycsb/script/network_failures.py:/app/ycsb-0.18.0/network_failures.py
       - ./ycsb/convert_to_json.py:/app/ycsb-0.18.0/convert_to_json.py
-    # command: ["/bin/bash", "-c", "/etc/cassandra/init-script.sh"]
 
 networks:
   cassandra_net:
